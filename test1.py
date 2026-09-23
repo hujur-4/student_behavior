@@ -66,9 +66,7 @@
                     }
                 }))
             else:
-                await websocket.send_text(json.dumps({"error": "Failed to decode image"}))
+                await websocket.send_text(json.dumps({
+                    "error": "Failed to decode image"
+                }))
                 
-    except WebSocketDisconnect:
-        print("Client disconnected")
-    except Exception as e:
-        print(f"Error processing frame: {e}")
