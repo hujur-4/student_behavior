@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOLOv8 Face Detection</title>
+    <title>Face & ID Card Detection Pro</title>
     <link rel="stylesheet" href="./style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -11,10 +11,10 @@
     <div class="app-container">
         <header>
             <div class="logo">
-                <span class="icon">👁️</span>
-                <h1>FaceDetect <span>Pro</span></h1>
+                <span class="icon">🪪</span>
+                <h1>VisionDetect <span>AI</span></h1>
             </div>
-            <p class="subtitle">Real-time YOLOv8 Face Detection powered by PyTorch</p>
+            <p class="subtitle">Simultaneous Real-time Face & ID Card Detection (YOLOv8)</p>
         </header>
 
         <main class="workspace">
@@ -44,6 +44,10 @@
                     <div class="stat-box">
                         <span class="stat-value" id="faces-counter">0</span>
                         <span class="stat-label">Faces</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-value" id="id-cards-counter">0</span>
+                        <span class="stat-label">ID Cards</span>
                     </div>
                 </div>
             </div>

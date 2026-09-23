@@ -1,75 +1,4 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.middleware.cors import CORSMiddleware
-from ultralytics import YOLO
-import cv2
-import numpy as np
-import base64
-import json
-import os
-
-app = FastAPI()
-
-# Allow CORS for frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Load YOLOv8 models for Face Detection and ID Card Detection
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-def resolve_model_path(filename: str) -> str:
-    """Finds model weights in models/, odel/, or project root directory."""
-    candidate_dirs = [
-        os.path.join(BASE_DIR, "models"),
-        os.path.join(BASE_DIR, "odel"),
-        BASE_DIR
-    ]
-    for directory in candidate_dirs:
-        path = os.path.join(directory, filename)
-        if os.path.exists(path):
-            return path
-    return os.path.join(BASE_DIR, "models", filename)
-
-FACE_MODEL_PATH = resolve_model_path("model.pt")
-ID_CARD_MODEL_PATH = resolve_model_path("best.pt")
-
-try:
-    face_model = YOLO(FACE_MODEL_PATH)
-    print(f"Face model loaded successfully from {FACE_MODEL_PATH}")
-except Exception as e:
-    print(f"Error loading face model ({FACE_MODEL_PATH}): {e}")
-    face_model = None
-
-try:
-    id_card_model = YOLO(ID_CARD_MODEL_PATH)
-    print(f"ID Card model loaded successfully from {ID_CARD_MODEL_PATH}")
-except Exception as e:
-    print(f"Error loading ID card model ({ID_CARD_MODEL_PATH}): {e}")
-    id_card_model = None
-
-@app.get("/")
-def read_root():
-    return {
-        "status": "Backend is running. Connect to /ws/detect for WebSocket inference.",
-        "models": {
-            "face_model_loaded": face_model is not None,
-            "id_card_model_loaded": id_card_model is not None
-        }
-    }
-
-@app.websocket("/ws/detect")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    if face_model is None and id_card_model is None:
-        await websocket.send_text(json.dumps({"error": "No models loaded"}))
-        await websocket.close()
-        return
-
-    try:
+  try:
         while True:
             # Receive frame as base64 string
             data = await websocket.receive_text()
@@ -143,4 +72,3 @@ async def websocket_endpoint(websocket: WebSocket):
         print("Client disconnected")
     except Exception as e:
         print(f"Error processing frame: {e}")
-
