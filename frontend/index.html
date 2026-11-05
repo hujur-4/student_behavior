@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Face & ID Card Detection Pro</title>
+    <title>VisionDetect AI - Intelligent Face & ID Compliance</title>
     <link rel="stylesheet" href="./style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-container">
@@ -14,7 +14,7 @@
                 <span class="icon">🪪</span>
                 <h1>VisionDetect <span>AI</span></h1>
             </div>
-            <p class="subtitle">Simultaneous Real-time Face & ID Card Detection (YOLOv8)</p>
+            <p class="subtitle">Real-time ID Card Compliance & FAISS Vector Identity Resolution</p>
         </header>
 
         <main class="workspace">
@@ -47,8 +47,27 @@
                     </div>
                     <div class="stat-box">
                         <span class="stat-value" id="id-cards-counter">0</span>
-                        <span class="stat-label">ID Cards</span>
+                        <span class="stat-label">ID Straps</span>
                     </div>
+                    <div class="stat-box highlight-danger">
+                        <span class="stat-value" id="violations-counter">0</span>
+                        <span class="stat-label">Violations</span>
+                    </div>
+                </div>
+
+                <div class="system-legend">
+                    <div class="legend-item"><span class="legend-dot compliant"></span> Compliant (ID OK)</div>
+                    <div class="legend-item"><span class="legend-dot identifying"></span> Identifying Face (Async)</div>
+                    <div class="legend-item"><span class="legend-dot violation"></span> Violation (ID Missing)</div>
+                </div>
+
+                <div class="quick-actions">
+                    <button id="btn-open-enroll" class="btn action-btn">
+                        <span>➕</span> Enroll New Student
+                    </button>
+                    <button id="btn-reset-pipeline" class="btn text-btn">
+                        <span>🔄</span> Reset Active Tracker
+                    </button>
                 </div>
             </div>
 
@@ -56,7 +75,7 @@
                 <div class="video-container" id="video-container">
                     <div class="placeholder" id="video-placeholder">
                         <span class="placeholder-icon">🎬</span>
-                        <p>Select a video source to begin detection</p>
+                        <p>Select a video source or start the live camera</p>
                     </div>
                     <!-- The video element for local playback -->
                     <video id="video-element" autoplay playsinline muted></video>
@@ -65,6 +84,99 @@
                 </div>
             </div>
         </main>
+
+        <!-- Database & Logs Management Section -->
+        <section class="management-section glass-panel">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="tab-faiss">
+                    <span>🗄️</span> FAISS Student Registry (<span id="faiss-total-count">0</span>)
+                </button>
+                <button class="tab-btn" data-tab="tab-violations">
+                    <span>⚠️</span> Incident Logs (<span id="violations-log-count">0</span>)
+                </button>
+            </div>
+
+            <!-- Tab 1: FAISS Registry -->
+            <div class="tab-content active" id="tab-faiss">
+                <div class="tab-toolbar">
+                    <p class="tab-desc">512-dimensional vector index powered by InceptionResnetV1 & FAISS.</p>
+                    <button id="btn-refresh-students" class="btn small-btn">Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Enrolled Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <tr><td colspan="5" class="empty-state">Loading enrolled students...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 2: Violations Log -->
+            <div class="tab-content" id="tab-violations">
+                <div class="tab-toolbar">
+                    <p class="tab-desc">Recorded offenses with 30-minute Incident Cooldown de-duplication.</p>
+                    <button id="btn-refresh-violations" class="btn small-btn">Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Violation</th>
+                                <th>Offense #</th>
+                            </tr>
+                        </thead>
+                        <tbody id="violations-table-body">
+                            <tr><td colspan="5" class="empty-state">No violations recorded yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Student Enrollment Modal -->
+    <div class="modal-overlay" id="enroll-modal">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3>Enroll Student in FAISS Database</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <form id="enroll-form">
+                <div class="form-group">
+                    <label for="enroll-id">Student ID</label>
+                    <input type="text" id="enroll-id" required placeholder="e.g. 104">
+                </div>
+                <div class="form-group">
+                    <label for="enroll-name">Full Name</label>
+                    <input type="text" id="enroll-name" required placeholder="e.g. Alex Carter">
+                </div>
+                <div class="form-group">
+                    <label for="enroll-dept">Department</label>
+                    <input type="text" id="enroll-dept" placeholder="e.g. Computer Science" value="Computer Science">
+                </div>
+                <div class="form-group">
+                    <label for="enroll-photo">Photo (Face must be clear)</label>
+                    <input type="file" id="enroll-photo" accept="image/*" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn secondary-btn" id="btn-cancel-enroll">Cancel</button>
+                    <button type="submit" class="btn primary-btn" id="btn-submit-enroll">Enroll & Vectorize</button>
+                </div>
+                <p id="enroll-status-msg" class="status-msg"></p>
+            </form>
+        </div>
     </div>
     
     <script type="module" src="./main.js"></script>

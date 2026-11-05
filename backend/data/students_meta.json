@@ -1,0 +1,38 @@
+[
+  {
+    "student_id": "104",
+    "name": "Alex Carter",
+    "department": "Computer Science",
+    "enrolled_at": "2026-11-05T16:54:15"
+  },
+  {
+    "student_id": "205",
+    "name": "Sarah Jenkins",
+    "department": "Electrical Eng",
+    "enrolled_at": "2026-11-05T16:54:15"
+  },
+  {
+    "student_id": "312",
+    "name": "David Kumar",
+    "department": "Mechanical Eng",
+    "enrolled_at": "2026-11-05T16:54:15"
+  },
+  {
+    "student_id": "418",
+    "name": "Emily Watson",
+    "department": "Information Tech",
+    "enrolled_at": "2026-11-05T16:54:15"
+  },
+  {
+    "student_id": "106",
+    "name": "hujur",
+    "department": "Computer Science",
+    "enrolled_at": "2026-11-05T17:31:47"
+  },
+  {
+    "student_id": "9990",
+    "name": "raj",
+    "department": "Computer Science",
+    "enrolled_at": "2026-11-05T17:52:23"
+  }
+]

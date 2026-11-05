@@ -1,7 +1,14 @@
 fastapi
 uvicorn
+websockets
 python-multipart
 ultralytics
 opencv-python-headless
 numpy
 pydantic
+faiss-cpu
+facenet-pytorch
+torch
+torchvision
+tqdm
+pillow
